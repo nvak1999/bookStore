@@ -7,7 +7,7 @@ const initialState = {
   errorMessage: "",
   page: 1,
   query: "",
-  limit: 10,
+  totalPage: 10,
 };
 
 export const getBook = createAsyncThunk(

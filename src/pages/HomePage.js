@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import PaginationBar from "../components/PaginationBar";
 import SearchForm from "../components/SearchForm";
-import api from "../apiService";
 import { FormProvider } from "../form";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getBook } from "./bookSlice";
-import { ChangePage, searchQuery } from "./bookSlice";
+import { searchQuery } from "./bookSlice";
 
 import {
   Container,
@@ -25,34 +24,17 @@ import {
 const BACKEND_API = process.env.REACT_APP_BACKEND_API;
 
 const HomePage = () => {
-  const { bookStore } = useSelector((state) => state.book);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getBook());
+    console.log("load");
+  }, [dispatch]);
 
-  const [pageNum, setPageNum] = useState(1);
-  const totalPage = 10;
-  const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const { bookStore, page, query, loading, totalPage, errorMessage } =
+    useSelector((state) => state.book);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       let url = `/books?_page=${pageNum}&_limit=${limit}`;
-  //       if (query) url += `&q=${query}`;
-  //       const res = await api.get(url);
-  //       setBooks(res.data);
-  //       setErrorMessage("");
-  //     } catch (error) {
-  //       setErrorMessage(error.message);
-  //     }
-  //     setLoading(false);
-  //   };
-  //   fetchData();
-  // }, [pageNum, limit, query]);
-
-  //--------------form
   const defaultValues = {
-    searchQuery: "",
+    query,
   };
 
   const methods = useForm({
@@ -61,7 +43,8 @@ const HomePage = () => {
 
   const { handleSubmit } = methods;
   const onSubmit = (data) => {
-    setQuery(data.searchQuery);
+    dispatch(searchQuery(data.searchQuery));
+    console.log(query);
   };
 
   const navigate = useNavigate();
@@ -86,11 +69,7 @@ const HomePage = () => {
             <SearchForm />
           </Stack>
         </FormProvider>
-        <PaginationBar
-          pageNum={pageNum}
-          setPageNum={setPageNum}
-          totalPageNum={totalPage}
-        />
+        <PaginationBar pageNum={page} totalPageNum={totalPage} />
       </Stack>
       <div>
         {loading ? (

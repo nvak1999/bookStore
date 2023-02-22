@@ -7,14 +7,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import BookDetailPage from "./pages/BookDetailPage";
 import PublicLayout from "./layout/PublicLayout";
 import MThemeProvider from "./theme/MThemeProvider";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { getBook } from "./pages/bookSlice";
+
 function App() {
-  const dispatch = useDispatch;
-  useEffect(() => {
-    dispatch(getBook());
-  }, [dispatch]);
   return (
     <BrowserRouter>
       <MThemeProvider>
