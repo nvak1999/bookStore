@@ -27,7 +27,6 @@ const HomePage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getBook());
-    console.log("load");
   }, [dispatch]);
 
   const { bookStore, page, query, loading, totalPage, errorMessage } =
