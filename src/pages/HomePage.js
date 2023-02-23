@@ -24,16 +24,15 @@ import {
 const BACKEND_API = process.env.REACT_APP_BACKEND_API;
 
 const HomePage = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getBook());
-  }, [dispatch]);
-
   const { bookStore, page, query, loading, totalPage, errorMessage } =
     useSelector((state) => state.book);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getBook({ page, query }));
+  }, [dispatch, page, query]);
 
   const defaultValues = {
-    query,
+    query: "",
   };
 
   const methods = useForm({
@@ -82,7 +81,7 @@ const HomePage = () => {
             justifyContent="space-around"
             flexWrap="wrap"
           >
-            {bookStore.map((book) => (
+            {bookStore?.map((book) => (
               <Card
                 key={book.id}
                 onClick={() => handleClickBook(book.id)}

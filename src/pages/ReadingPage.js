@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Button,
@@ -6,21 +6,25 @@ import {
   Card,
   Stack,
   CardMedia,
-  CardActionArea,
   Typography,
   CardContent,
 } from "@mui/material";
 import { ClipLoader } from "react-spinners";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import api from "../apiService";
-
+import { getReadingBook, removeReadingBook } from "./bookSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { setRemovedBookId } from "./bookSlice";
 const BACKEND_API = process.env.REACT_APP_BACKEND_API;
 
 const ReadingPage = () => {
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [removedBookId, setRemovedBookId] = useState("");
+  const { bookStore, loading } = useSelector((state) => state.book);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getReadingBook());
+  }, [dispatch]);
+
   const navigate = useNavigate();
 
   const handleClickBook = (bookId) => {
@@ -32,35 +36,11 @@ const ReadingPage = () => {
   };
 
   useEffect(() => {
-    if (removedBookId) return;
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await api.get(`/favorites`);
-        setBooks(res.data);
-      } catch (error) {
-        toast(error.message);
-      }
-      setLoading(false);
-    };
-    fetchData();
-  }, [removedBookId]);
-
-  useEffect(() => {
+    console.log(removedBookId);
     if (!removedBookId) return;
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        await api.delete(`/favorites/${removedBookId}`);
-        toast.success("The book has been removed");
-        setRemovedBookId("");
-      } catch (error) {
-        toast(error.message);
-      }
-      setLoading(false);
-    };
-    fetchData();
-  }, [removedBookId]);
+    dispatch(removeReadingBook(removedBookId));
+    toast.success("The book has been removed");
+  }, [dispatch, removedBookId]);
 
   return (
     <Container>
@@ -78,7 +58,7 @@ const ReadingPage = () => {
           justifyContent="space-around"
           flexWrap={"wrap"}
         >
-          {books.map((book) => (
+          {bookStore.map((book) => (
             <Card
               key={book.id}
               sx={{
@@ -87,7 +67,7 @@ const ReadingPage = () => {
                 marginBottom: "2rem",
               }}
             >
-              <CardActionArea>
+              <Card sx={{ position: "relative" }}>
                 <CardMedia
                   component="img"
                   image={`${BACKEND_API}/${book.imageLink}`}
@@ -117,7 +97,7 @@ const ReadingPage = () => {
                     &times;
                   </Button>
                 </CardContent>
-              </CardActionArea>
+              </Card>
             </Card>
           ))}
         </Stack>

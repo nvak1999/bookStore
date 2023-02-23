@@ -6,7 +6,7 @@ import { FTextField } from "../form";
 const SearchForm = () => {
   return (
     <FTextField
-      name="searchQuery"
+      name="query"
       sx={{ width: 300 }}
       size="small"
       InputProps={{

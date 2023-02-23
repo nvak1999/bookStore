@@ -3,7 +3,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useDispatch } from "react-redux";
 import { ChangePage } from "../pages/bookSlice";
-const PaginationBar = ({ pageNum, setPageNum, totalPageNum }) => {
+const PaginationBar = ({ pageNum, setPageNum }) => {
   const dispatch = useDispatch();
   const handleChange = (event, value) => {
     dispatch(ChangePage(value));
@@ -11,7 +11,7 @@ const PaginationBar = ({ pageNum, setPageNum, totalPageNum }) => {
   return (
     <Stack spacing={2}>
       <Pagination
-        count={totalPageNum}
+        count={10}
         page={pageNum}
         onChange={(e, v) => handleChange(e, v)}
         showFirstButton
