@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getReadingBook, removeReadingBook } from "./bookSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { setRemovedBookId } from "./bookSlice";
+
 const BACKEND_API = process.env.REACT_APP_BACKEND_API;
 
 const ReadingPage = () => {
